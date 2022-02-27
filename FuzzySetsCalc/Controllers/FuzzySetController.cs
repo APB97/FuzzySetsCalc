@@ -72,5 +72,17 @@ namespace FuzzySetsCalc.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public IActionResult Delete(string id)
+        {
+            FuzzySet? foundSet = _fuzzySetStorage.fuzzySets.Find(f => f.FuzzySetId == id);
+            if (foundSet != null)
+            {
+                _fuzzySetStorage.fuzzySets.Remove(foundSet);
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }
