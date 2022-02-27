@@ -49,5 +49,28 @@ namespace FuzzySetsCalc.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public IActionResult Intersect()
+        {
+            return View(new IntersectionParameters { setId = "", otherSetId="", resultId = "" });
+        }
+
+        [HttpPost]
+        public IActionResult Intersect(IntersectionParameters model)
+        {
+            var command = new IntersectCommand(_fuzzySetService);
+            command.ResultId = model.resultId;
+            command.Id = model.setId;
+            command.OtherSetId = model.otherSetId;
+            command.Execute();
+            _invoker.Commands.Add(command);
+            
+            string json = JsonConvert.SerializeObject(_invoker, _serializerSettings);
+
+            System.IO.File.WriteAllText("/data/commands.json", json);
+
+            return RedirectToAction("Index");
+        }
     }
 }

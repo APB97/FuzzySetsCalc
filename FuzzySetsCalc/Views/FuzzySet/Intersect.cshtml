@@ -1,0 +1,32 @@
+﻿@model IntersectionParameters
+@{
+}
+
+<form asp-action="Intersect">
+    <div class="row">
+        @Html.LabelFor(model => model.resultId, new { @class = "col-1" })
+        <div class="col-4">
+            @Html.EditorFor(model => model.resultId)
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        @Html.LabelFor(model => model.setId, new { @class = "col-1" })
+        <div class="col-4">
+            @Html.EditorFor(model => model.setId)
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        @Html.LabelFor(model => model.otherSetId, new { @class = "col-1" })
+        <div class="col-4">
+            @Html.EditorFor(model => model.otherSetId)
+        </div>
+    </div>
+    <br/>
+    
+    <div class="form-group">
+        <input type="submit" value="Intersect" class="btn btn-primary" />
+    </div>
+</form>
+

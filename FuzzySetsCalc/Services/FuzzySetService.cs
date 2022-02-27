@@ -54,5 +54,17 @@ namespace FuzzySetsCalc.Services
                 }
             });
         }
+
+        public void Intersect(string resultingSetName, string setId, string otherSetId)
+        {
+            var oneSet = _storage.fuzzySets.Find(f => f.FuzzySetId == setId);
+            var otherSet = _storage.fuzzySets.Find(f => f.FuzzySetId == otherSetId);
+
+            if (oneSet == null || otherSet == null)
+                return;
+
+            FuzzySet result = oneSet.Intersect(otherSet, resultingSetName);
+            _storage.fuzzySets.Add(result);
+        }
     }
 }
