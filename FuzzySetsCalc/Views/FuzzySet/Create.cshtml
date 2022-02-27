@@ -1,9 +1,5 @@
 ﻿@model TrapezoidFuzzySet
 
-@{
-    TrapezoidFuzzySet thisSet = new TrapezoidFuzzySet();
-}
-
 <form asp-action="Create">
     <div class="row">
         @Html.LabelFor(model => model.Id, new { @class = "col-1" })
