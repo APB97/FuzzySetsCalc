@@ -1,0 +1,47 @@
+﻿@model TrapezoidFuzzySet
+
+@{
+    TrapezoidFuzzySet thisSet = new TrapezoidFuzzySet();
+}
+
+<form asp-action="Create">
+    <div class="row">
+        @Html.LabelFor(model => model.Id, new { @class = "col-1" })
+        <div class="col-4">
+            @Html.EditorFor(model => model.Id)
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        @Html.LabelFor(model => model.L0, new { @class = "col-1" })
+        <div class="col-4">
+            @Html.EditorFor(model => model.L0)
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        @Html.LabelFor(model => model.L1, new { @class = "col-1" })
+        <div class="col-4">
+            @Html.EditorFor(model => model.L1)
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        @Html.LabelFor(model => model.R1, new { @class = "col-1" })
+        <div class="col-4">
+            @Html.EditorFor(model => model.R1)
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        @Html.LabelFor(model => model.R0, new { @class = "col-1" })
+        <div class="col-4">
+            @Html.EditorFor(model => model.R0)
+        </div>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
+

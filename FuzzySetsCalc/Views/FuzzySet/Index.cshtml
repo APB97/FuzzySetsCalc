@@ -1,0 +1,40 @@
+﻿@using System.Globalization
+@model List<FuzzySet>
+
+@{
+    TrapezoidFuzzySet thisSet = new TrapezoidFuzzySet();
+}
+<script src="~/js/RGraph/RGraph.common.core.js"></script>
+<script src="~/js/RGraph/RGraph.line.js"></script>
+
+<a asp-area="" asp-controller="FuzzySet" asp-action="Create">Create</a>
+<br/>
+
+@foreach (var set in Model)
+{
+    @*@set.FuzzySetId*@
+    var id = set.FuzzySetId;
+    double x = 0;
+    var dataPoints = new List<DataPoint>();
+    for (; x <= 20; x+= 1)
+    {
+        dataPoints.Add(new DataPoint(x, set?.MembershipFunction?.Invoke(x)));
+    }
+    <canvas id="@id" width="400" height="200"></canvas>
+
+    <script>
+        {
+            var chart = new RGraph.Line({
+                id: '@id',
+                data: [ @string.Join(", ", dataPoints.Select(p => Convert.ToString(p.Y, new CultureInfo("en")))) ],
+                options:
+                {
+                    title: '@set?.FuzzySetId',
+                    yaxisLabelsCount: 1,
+                    xaxisLabels: [ @Html.Raw($"'{dataPoints.First().X}', '{dataPoints.Last().X}'") ]
+                }
+            });
+            chart.draw();
+        }
+    </script>
+}
