@@ -13,6 +13,7 @@ namespace FuzzySetsCalc.Controllers
         private readonly FuzzySetService? _fuzzySetService;
         private readonly Invoker _invoker;
         private readonly JsonSerializerSettings _serializerSettings;
+
         public FuzzySetController(FuzzySetStorage fuzzySetStorage, FuzzySetService fuzzySetService, Invoker invoker, JsonSerializerSettings serializerSettings)
         {
             _fuzzySetStorage = fuzzySetStorage;
@@ -42,10 +43,7 @@ namespace FuzzySetsCalc.Controllers
             command.Trapezoid = trapezoid;
             command.Execute();
             _invoker.Commands.Add(command);
-
-            string json = JsonConvert.SerializeObject(_invoker, _serializerSettings);
-
-            System.IO.File.WriteAllText("/data/commands.json", json);
+            SaveToJson("/data/commands.json");
 
             return RedirectToAction("Index");
         }
@@ -65,10 +63,7 @@ namespace FuzzySetsCalc.Controllers
             command.OtherSetId = model.otherSetId;
             command.Execute();
             _invoker.Commands.Add(command);
-            
-            string json = JsonConvert.SerializeObject(_invoker, _serializerSettings);
-
-            System.IO.File.WriteAllText("/data/commands.json", json);
+            SaveToJson("/data/commands.json");
 
             return RedirectToAction("Index");
         }
@@ -76,13 +71,18 @@ namespace FuzzySetsCalc.Controllers
         [HttpGet]
         public IActionResult Delete(string id)
         {
-            FuzzySet? foundSet = _fuzzySetStorage.fuzzySets.Find(f => f.FuzzySetId == id);
-            if (foundSet != null)
-            {
-                _fuzzySetStorage.fuzzySets.Remove(foundSet);
-            }
+            var command = new RemoveSetCommand(_fuzzySetService) { RemoveId = id};
+            command.Execute();
+            _invoker.Commands.Add(command);
+            SaveToJson("/data/commands.json");
 
             return RedirectToAction("Index");
+        }
+
+        protected void SaveToJson(string path)
+        {
+            string json = JsonConvert.SerializeObject(_invoker, _serializerSettings);
+            System.IO.File.WriteAllText(path, json);
         }
     }
 }
