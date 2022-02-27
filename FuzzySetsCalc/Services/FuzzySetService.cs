@@ -17,7 +17,7 @@ namespace FuzzySetsCalc.Services
             _storage.fuzzySets.Add(new FuzzySet
             {
                 FuzzySetId = trapezoid.Id,
-                MembershipFunction = trapezoid.MembershipFunction
+                MembershipFunction = trapezoid.GetMembershipFunction()
             });
         }
 
