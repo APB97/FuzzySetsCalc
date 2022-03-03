@@ -45,7 +45,6 @@ namespace FuzzySetsCalc.Controllers
             };
             command.Execute();
             _invoker.Commands.Add(command);
-            SaveToJson("/data/commands.json");
 
             return RedirectToAction("Index");
         }
@@ -67,7 +66,6 @@ namespace FuzzySetsCalc.Controllers
             };
             command.Execute();
             _invoker.Commands.Add(command);
-            SaveToJson("/data/commands.json");
 
             return RedirectToAction("Index");
         }
@@ -78,15 +76,19 @@ namespace FuzzySetsCalc.Controllers
             var command = new RemoveSetCommand(_fuzzySetService) { RemoveId = id};
             command.Execute();
             _invoker.Commands.Add(command);
-            SaveToJson("/data/commands.json");
 
             return RedirectToAction("Index");
         }
 
-        protected void SaveToJson(string path)
+        [HttpGet]
+        public IActionResult Download()
         {
             string json = JsonConvert.SerializeObject(_invoker, _serializerSettings);
-            System.IO.File.WriteAllText(path, json);
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(json);
+            writer.Flush();
+            return File(stream.ToArray(), "application/json");
         }
 
         [HttpGet]
