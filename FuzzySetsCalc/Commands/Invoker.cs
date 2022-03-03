@@ -10,6 +10,8 @@ namespace FuzzySetsCalc.Commands
 
         public IList<ICommand> Commands { get; set; } = new List<ICommand>();
 
+        public IServiceProvider? Services { get; set; }
+
         public Invoker() { _logger = new NullLogger<Invoker>(); }
 
         public Invoker(ILogger<Invoker> logger)
@@ -17,13 +19,13 @@ namespace FuzzySetsCalc.Commands
             _logger = logger;
         }
 
-        public void InvokeAllNoThrow(IServiceProvider services)
+        public void InvokeAllNoThrow()
         {
             foreach (var command in Commands)
             {
                 try
                 {
-                    command.ISP = services;
+                    command.ISP = Services;
                     command.Execute();
                 }
                 catch (Exception ex)

@@ -16,7 +16,8 @@ builder.Services.AddSingleton<Invoker>();
 
 var app = builder.Build();
 
-var invoker = app.Services.GetService<Invoker>();
+var invoker = app.Services.GetRequiredService<Invoker>();
+invoker.Services = app.Services;
 
 if (invoker != null && File.Exists("/data/commands.json"))
 {
@@ -30,7 +31,7 @@ if (invoker != null && File.Exists("/data/commands.json"))
     }
 }
 
-invoker?.InvokeAllNoThrow(app.Services);
+invoker?.InvokeAllNoThrow();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

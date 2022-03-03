@@ -39,8 +39,10 @@ namespace FuzzySetsCalc.Controllers
             if (!ModelState.IsValid)
                 return View(trapezoid);
 
-            var command = new CreateTrapezoidCommand(_fuzzySetService);
-            command.Trapezoid = trapezoid;
+            var command = new CreateTrapezoidCommand(_fuzzySetService)
+            {
+                Trapezoid = trapezoid
+            };
             command.Execute();
             _invoker.Commands.Add(command);
             SaveToJson("/data/commands.json");
@@ -57,10 +59,12 @@ namespace FuzzySetsCalc.Controllers
         [HttpPost]
         public IActionResult Intersect(IntersectionParameters model)
         {
-            var command = new IntersectCommand(_fuzzySetService);
-            command.ResultId = model.resultId;
-            command.Id = model.setId;
-            command.OtherSetId = model.otherSetId;
+            var command = new IntersectCommand(_fuzzySetService)
+            {
+                ResultId = model.resultId,
+                Id = model.setId,
+                OtherSetId = model.otherSetId
+            };
             command.Execute();
             _invoker.Commands.Add(command);
             SaveToJson("/data/commands.json");
@@ -83,6 +87,36 @@ namespace FuzzySetsCalc.Controllers
         {
             string json = JsonConvert.SerializeObject(_invoker, _serializerSettings);
             System.IO.File.WriteAllText(path, json);
+        }
+
+        [HttpGet]
+        public IActionResult Load()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Load(FormFileModel fileModel)
+        {
+            IFormFile? formFile = fileModel.FormFile;
+            if (formFile == null) return View();
+
+            LoadFromJsonFormFile(formFile);
+            return RedirectToAction("Index");
+        }
+
+        protected void LoadFromJsonFormFile(IFormFile file)
+        {
+            using var stream = file.OpenReadStream();
+            using var reader = new StreamReader(stream);
+            
+            var json = reader.ReadToEnd();
+            var commands = JsonConvert.DeserializeObject<Invoker>(json, _serializerSettings)?.Commands;
+            if (commands != null)
+            {
+                _invoker.Commands = commands;
+                _invoker.InvokeAllNoThrow();
+            }
         }
     }
 }
