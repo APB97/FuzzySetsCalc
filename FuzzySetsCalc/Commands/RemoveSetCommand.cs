@@ -1,26 +1,20 @@
 ﻿using FuzzySetsCalc.Services;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace FuzzySetsCalc.Commands
 {
-    [JsonSerializable(typeof(ICommand))]
     public class RemoveSetCommand : ICommand
     {
         private FuzzySetService? _service;
-
-
-        private IServiceProvider? provider;
 
         public string? RemoveId { get; set; }
 
         [JsonIgnore]
         public IServiceProvider? ISP
         {
-            get => null;
             set
             {
-                provider = value;
-                _service = provider?.GetRequiredService<FuzzySetService>();
+                _service = value?.GetRequiredService<FuzzySetService>();
             }
         }
 

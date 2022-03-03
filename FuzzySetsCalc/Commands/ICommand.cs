@@ -5,7 +5,7 @@ namespace FuzzySetsCalc.Commands
     public interface ICommand
     {
         [JsonIgnore]
-        IServiceProvider? ISP { get; set; }
+        IServiceProvider? ISP { set; }
 
         void Execute();
     }

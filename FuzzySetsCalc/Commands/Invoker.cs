@@ -10,6 +10,7 @@ namespace FuzzySetsCalc.Commands
 
         public IList<ICommand> Commands { get; set; } = new List<ICommand>();
 
+        [JsonIgnore]
         public IServiceProvider? Services { get; set; }
 
         public Invoker() { _logger = new NullLogger<Invoker>(); }

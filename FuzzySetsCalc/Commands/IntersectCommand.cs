@@ -1,20 +1,17 @@
 ﻿using FuzzySetsCalc.Services;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace FuzzySetsCalc.Commands
 {
     public class IntersectCommand : ICommand
     {
         private FuzzySetService? _service;
-        private IServiceProvider? _provider;
 
         [JsonIgnore]
         public IServiceProvider? ISP
         {
-            get => null;
             set
             {
-                _provider = value;
                 _service = value?.GetRequiredService<FuzzySetService>();
             }
         }
