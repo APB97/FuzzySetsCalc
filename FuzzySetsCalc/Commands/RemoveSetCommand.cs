@@ -16,7 +16,7 @@ namespace FuzzySetsCalc.Commands
         [JsonIgnore]
         public IServiceProvider? ISP
         {
-            get => provider;
+            get => null;
             set
             {
                 provider = value;

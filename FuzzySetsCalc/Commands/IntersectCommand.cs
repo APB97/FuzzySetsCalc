@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace FuzzySetsCalc.Commands
 {
-    [JsonSerializable(typeof(ICommand))]
     public class IntersectCommand : ICommand
     {
         private FuzzySetService? _service;
@@ -12,7 +11,7 @@ namespace FuzzySetsCalc.Commands
         [JsonIgnore]
         public IServiceProvider? ISP
         {
-            get => _provider;
+            get => null;
             set
             {
                 _provider = value;

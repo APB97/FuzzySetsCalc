@@ -4,7 +4,6 @@ using System.Text.Json.Serialization;
 
 namespace FuzzySetsCalc.Commands
 {
-    [JsonSerializable(typeof(ICommand))]
     public class CreateTrapezoidCommand : ICommand
     {
         private FuzzySetService? _service;
@@ -13,7 +12,7 @@ namespace FuzzySetsCalc.Commands
         [JsonIgnore]
         public IServiceProvider? ISP
         {
-            get => provider;
+            get => null;
             set
             {
                 provider = value;
