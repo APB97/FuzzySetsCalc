@@ -11,8 +11,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<FuzzySetStorage>();
 var jsonSettings = new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Objects };
 builder.Services.AddSingleton<JsonSerializerSettings>(jsonSettings);
-builder.Services.AddSingleton<FuzzySetService>(isp => new FuzzySetService(isp.GetRequiredService<FuzzySetStorage>()));
+builder.Services.AddSingleton<FuzzySetService>();
 builder.Services.AddSingleton<Invoker>();
+builder.Services.AddSingleton<JsonService>();
 
 var app = builder.Build();
 

@@ -10,16 +10,16 @@ namespace FuzzySetsCalc.Controllers
     public class FuzzySetController : Controller
     {
         private readonly FuzzySetStorage _fuzzySetStorage;
-        private readonly FuzzySetService? _fuzzySetService;
+        private readonly FuzzySetService _fuzzySetService;
         private readonly Invoker _invoker;
-        private readonly JsonSerializerSettings _serializerSettings;
+        private readonly JsonService _jsonService;
 
-        public FuzzySetController(FuzzySetStorage fuzzySetStorage, FuzzySetService fuzzySetService, Invoker invoker, JsonSerializerSettings serializerSettings)
+        public FuzzySetController(FuzzySetStorage fuzzySetStorage, FuzzySetService fuzzySetService, Invoker invoker, JsonSerializerSettings serializerSettings, JsonService jsonService)
         {
             _fuzzySetStorage = fuzzySetStorage;
             _fuzzySetService = fuzzySetService;
             _invoker = invoker;
-            _serializerSettings = serializerSettings;
+            _jsonService = jsonService;
         }
 
         public IActionResult Index()
@@ -83,12 +83,7 @@ namespace FuzzySetsCalc.Controllers
         [HttpGet]
         public IActionResult Download()
         {
-            string json = JsonConvert.SerializeObject(_invoker, _serializerSettings);
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            writer.Write(json);
-            writer.Flush();
-            return File(stream.ToArray(), "application/json");
+            return File(_jsonService.ToJsonByteArray(_invoker), _jsonService.JsonContentType);
         }
 
         [HttpGet]
@@ -103,22 +98,12 @@ namespace FuzzySetsCalc.Controllers
             IFormFile? formFile = fileModel.FormFile;
             if (formFile == null) return View();
 
-            LoadFromJsonFormFile(formFile);
-            return RedirectToAction("Index");
-        }
+            var deserializedInvoker = _jsonService.FromFormFile<Invoker>(formFile);
+            if (deserializedInvoker == null) return View();
 
-        protected void LoadFromJsonFormFile(IFormFile file)
-        {
-            using var stream = file.OpenReadStream();
-            using var reader = new StreamReader(stream);
-            
-            var json = reader.ReadToEnd();
-            var commands = JsonConvert.DeserializeObject<Invoker>(json, _serializerSettings)?.Commands;
-            if (commands != null)
-            {
-                _invoker.Commands = commands;
-                _invoker.InvokeAllNoThrow();
-            }
+            _invoker.Commands = deserializedInvoker.Commands;
+            _invoker.InvokeAllNoThrow();
+            return RedirectToAction("Index");
         }
     }
 }
