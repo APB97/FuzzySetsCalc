@@ -5,9 +5,6 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-RUN mkdir /data
-VOLUME /data
-
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["FuzzySetsCalc/FuzzySetsCalc.csproj", "FuzzySetsCalc/"]
