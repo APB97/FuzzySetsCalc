@@ -20,20 +20,6 @@ var app = builder.Build();
 var invoker = app.Services.GetRequiredService<Invoker>();
 invoker.Services = app.Services;
 
-if (invoker != null && File.Exists("/data/commands.json"))
-{
-    try
-    {
-        invoker.Commands = JsonConvert.DeserializeObject<Invoker>(File.ReadAllText("/data/commands.json"), jsonSettings)?.Commands ?? new List<ICommand>();
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine(ex.Message);
-    }
-}
-
-invoker?.InvokeAllNoThrow();
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
