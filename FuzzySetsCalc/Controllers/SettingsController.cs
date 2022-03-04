@@ -28,6 +28,7 @@ namespace FuzzySetsCalc.Controllers
         public IActionResult Edit(ChartDisplaySettings settings)
         {
             if (settings == null) return View(_settings);
+            if (settings.MaximumX <= settings.MinimumX) return View(_settings);
 
             _settings.MaximumX = settings.MaximumX;
             _settings.MinimumX = settings.MinimumX;

@@ -13,11 +13,11 @@ namespace FuzzySetsCalc.Models
 
         public static ValidationResult ValidateMaximumX(float maxX, ValidationContext context)
         {
-            return context.ObjectInstance is ChartDisplaySettings settings && maxX > settings.MinimumX ? ValidationResult.Success : new ValidationResult(null);
+            return context.ObjectInstance is ChartDisplaySettings settings && maxX > settings.MinimumX ? ValidationResult.Success : new ValidationResult("Maximum X not greater than Minimum X");
         }
         public static ValidationResult ValidateMinimumX(float minX, ValidationContext context)
         {
-            return context.ObjectInstance is ChartDisplaySettings settings && minX < settings.MaximumX ? ValidationResult.Success : new ValidationResult(null);
+            return context.ObjectInstance is ChartDisplaySettings settings && minX < settings.MaximumX ? ValidationResult.Success : new ValidationResult("Minimum X not less than Maximum X");
         }
 
     }
