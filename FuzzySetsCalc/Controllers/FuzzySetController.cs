@@ -121,6 +121,7 @@ namespace FuzzySetsCalc.Controllers
             var deserializedInvoker = _jsonService.FromFormFile<Invoker>(formFile);
             if (deserializedInvoker == null) return View();
 
+            _invoker.DisplaySettings = deserializedInvoker.DisplaySettings;
             _invoker.Commands = deserializedInvoker.Commands;
             _invoker.InvokeAllNoThrow();
             return RedirectToAction("Index");

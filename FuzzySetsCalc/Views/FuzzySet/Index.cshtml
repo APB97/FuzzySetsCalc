@@ -38,7 +38,7 @@
                     title: '@set?.FuzzySetId',
                     yaxisLabelsCount: 1,
                     xaxisLabels: [ @Html.Raw($"'{dataPoints.First().X}', '{dataPoints.Last().X}'") ],
-                    xaxisTickmarksCount: 20
+                    xaxisTickmarksCount: @DisplaySetings.MaximumX - @DisplaySetings.MinimumX
                 }
             });
             chart.draw();
