@@ -1,6 +1,8 @@
 ﻿@using System.Globalization
 @model List<FuzzySet>
 
+@inject ChartDisplaySettings DisplaySetings
+
 <script src="~/js/RGraph/RGraph.common.core.js"></script>
 <script src="~/js/RGraph/RGraph.line.js"></script>
 
@@ -11,13 +13,13 @@
 <a asp-area="" asp-controller="FuzzySet" asp-action="Union">Union</a>
 <br/>
 
-@foreach (var set in Model)
+@foreach (FuzzySet set in Model)
 {
     
     var id = set.FuzzySetId;
-    double x = 0;
+    double x = DisplaySetings.MinimumX;
     var dataPoints = new List<DataPoint>();
-    for (; x <= 20; x+= 0.125)
+    for (; x <= DisplaySetings.MaximumX; x+= DisplaySetings.Precision)
     {
         dataPoints.Add(new DataPoint(x, set?.MembershipFunction?.Invoke(x)));
     }
@@ -35,7 +37,8 @@
                 {
                     title: '@set?.FuzzySetId',
                     yaxisLabelsCount: 1,
-                    xaxisLabels: [ @Html.Raw($"'{dataPoints.First().X}', '{dataPoints.Last().X}'") ]
+                    xaxisLabels: [ @Html.Raw($"'{dataPoints.First().X}', '{dataPoints.Last().X}'") ],
+                    xaxisTickmarksCount: 20
                 }
             });
             chart.draw();

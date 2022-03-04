@@ -1,5 +1,6 @@
 using FuzzySetsCalc.Commands;
 using FuzzySetsCalc.Data;
+using FuzzySetsCalc.Models;
 using FuzzySetsCalc.Services;
 using Newtonsoft.Json;
 
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton<FuzzySetStorage>();
+builder.Services.AddSingleton<ChartDisplaySettings>();
 var jsonSettings = new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Objects };
 builder.Services.AddSingleton<JsonSerializerSettings>(jsonSettings);
 builder.Services.AddSingleton<FuzzySetService>();
