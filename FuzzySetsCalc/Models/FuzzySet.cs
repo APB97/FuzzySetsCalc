@@ -15,5 +15,16 @@
                 MembershipFunction = x => Math.Min(this.MembershipFunction(x),otherSet.MembershipFunction(x))
             };
         }
+
+        public FuzzySet Union(FuzzySet otherSet, string resultingSetId)
+        {
+            if (otherSet == null) return this;
+
+            return new FuzzySet()
+            {
+                FuzzySetId = resultingSetId,
+                MembershipFunction = x => Math.Max(this.MembershipFunction(x), otherSet.MembershipFunction(x))
+            };
+        }
     }
 }

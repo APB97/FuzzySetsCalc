@@ -4,6 +4,6 @@ namespace FuzzySetsCalc.Data
 {
     public class FuzzySetStorage
     {
-        public readonly List<FuzzySet> fuzzySets = new List<FuzzySet>();
+        public readonly List<FuzzySet> fuzzySets = new();
     }
 }

@@ -1,6 +1,6 @@
 ﻿@model BinarySetOperatorParameters
 
-<form asp-action="Intersect">
+<form asp-action="Union">
     <div class="row">
         @Html.LabelFor(model => model.ResultId, "Resulting Fuzzy Set Id", new { @class = "col-2" })
         <div class="col-4">
@@ -24,7 +24,7 @@
     <br/>
     
     <div class="form-group">
-        <input type="submit" value="Intersect" class="btn btn-primary" />
+        <input type="submit" value="Union" class="btn btn-primary" />
     </div>
 </form>
 

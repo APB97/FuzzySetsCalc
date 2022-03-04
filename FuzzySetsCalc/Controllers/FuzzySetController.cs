@@ -3,7 +3,6 @@ using FuzzySetsCalc.Data;
 using FuzzySetsCalc.Models;
 using FuzzySetsCalc.Services;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace FuzzySetsCalc.Controllers
 {
@@ -14,7 +13,7 @@ namespace FuzzySetsCalc.Controllers
         private readonly Invoker _invoker;
         private readonly JsonService _jsonService;
 
-        public FuzzySetController(FuzzySetStorage fuzzySetStorage, FuzzySetService fuzzySetService, Invoker invoker, JsonSerializerSettings serializerSettings, JsonService jsonService)
+        public FuzzySetController(FuzzySetStorage fuzzySetStorage, FuzzySetService fuzzySetService, Invoker invoker, JsonService jsonService)
         {
             _fuzzySetStorage = fuzzySetStorage;
             _fuzzySetService = fuzzySetService;
@@ -52,17 +51,38 @@ namespace FuzzySetsCalc.Controllers
         [HttpGet]
         public IActionResult Intersect()
         {
-            return View(new IntersectionParameters { setId = "", otherSetId="", resultId = "" });
+            return View(new BinarySetOperatorParameters { SetId = "", OtherSetId="", ResultId = "" });
         }
 
         [HttpPost]
-        public IActionResult Intersect(IntersectionParameters model)
+        public IActionResult Intersect(BinarySetOperatorParameters model)
         {
             var command = new IntersectCommand(_fuzzySetService)
             {
-                ResultId = model.resultId,
-                Id = model.setId,
-                OtherSetId = model.otherSetId
+                ResultId = model.ResultId,
+                Id = model.SetId,
+                OtherSetId = model.OtherSetId
+            };
+            command.Execute();
+            _invoker.Commands.Add(command);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Union()
+        {
+            return View(new BinarySetOperatorParameters { SetId = "", OtherSetId = "", ResultId = "" });
+        }
+
+        [HttpPost]
+        public IActionResult Union(BinarySetOperatorParameters model)
+        {
+            var command = new UnionCommand(_fuzzySetService)
+            {
+                ResultId = model.ResultId,
+                Id = model.SetId,
+                OtherSetId = model.OtherSetId
             };
             command.Execute();
             _invoker.Commands.Add(command);
