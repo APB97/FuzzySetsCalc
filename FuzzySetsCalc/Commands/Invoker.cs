@@ -1,4 +1,5 @@
 ﻿using FuzzySetsCalc.Models;
+using MediatR;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 
@@ -33,7 +34,7 @@ namespace FuzzySetsCalc.Commands
         }
 
         [JsonIgnore]
-        public IServiceProvider? Services { get; set; }
+        public IMediator? Mediator { get; private set; }
 
         public Invoker()
         {
@@ -41,10 +42,20 @@ namespace FuzzySetsCalc.Commands
             _displaySettings = null;
         }
 
-        public Invoker(ILogger<Invoker> logger, ChartDisplaySettings? displaySettings)
+        public Invoker(ILogger<Invoker> logger, ChartDisplaySettings? displaySettings, IMediator? mediator)
         {
             _logger = logger;
             _displaySettings = displaySettings;
+            Mediator = mediator;
+        }
+
+        public void InvokeSingle(ICommand command)
+        {
+            if (Mediator is not null)
+            {
+                command.Execute(Mediator);
+                Commands.Add(command);
+            }
         }
 
         public void InvokeAllNoThrow()
@@ -53,8 +64,10 @@ namespace FuzzySetsCalc.Commands
             {
                 try
                 {
-                    command.ISP = Services;
-                    command.Execute();
+                    if (Mediator is not null)
+                    {
+                        command.Execute(Mediator);
+                    }
                 }
                 catch (Exception ex)
                 {

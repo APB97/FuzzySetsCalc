@@ -2,12 +2,14 @@ using FuzzySetsCalc.Commands;
 using FuzzySetsCalc.Data;
 using FuzzySetsCalc.Models;
 using FuzzySetsCalc.Services;
+using MediatR;
 using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddMediatR(typeof(Program));
 
 builder.Services.AddSingleton<FuzzySetStorage>();
 builder.Services.AddSingleton<ChartDisplaySettings>();
@@ -18,9 +20,6 @@ builder.Services.AddSingleton<Invoker>();
 builder.Services.AddSingleton<JsonService>();
 
 var app = builder.Build();
-
-var invoker = app.Services.GetRequiredService<Invoker>();
-invoker.Services = app.Services;
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

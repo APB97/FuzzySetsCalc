@@ -1,12 +1,9 @@
-﻿using System.Text.Json.Serialization;
+﻿using MediatR;
 
 namespace FuzzySetsCalc.Commands
 {
     public interface ICommand
     {
-        [JsonIgnore]
-        IServiceProvider? ISP { set; }
-
-        void Execute();
+        void Execute(IMediator mediator);
     }
 }

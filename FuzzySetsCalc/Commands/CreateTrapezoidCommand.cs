@@ -1,34 +1,19 @@
 ﻿using FuzzySetsCalc.Models;
-using FuzzySetsCalc.Services;
-using Newtonsoft.Json;
+using MediatR;
 
 namespace FuzzySetsCalc.Commands
 {
     public class CreateTrapezoidCommand : ICommand
     {
-        private FuzzySetService? _service;
-
-        [JsonIgnore]
-        public IServiceProvider? ISP
-        {
-            set
-            {
-                _service = value?.GetRequiredService<FuzzySetService>();
-            }
-        }
-
-        public CreateTrapezoidCommand(FuzzySetService? service)
-        {
-            _service = service;
-        }
+        public CreateTrapezoidCommand() { }
 
         public TrapezoidFuzzySet? Trapezoid { get; set; }
 
-        public void Execute()
+        public void Execute(IMediator mediator)
         {
-            if (_service != null && Trapezoid != null)
+            if (Trapezoid is not null)
             {
-                _service.CreateTrapezoid(Trapezoid);
+                mediator.Publish(new CreateTrapezoidNotification(Trapezoid));
             }
         }
     }

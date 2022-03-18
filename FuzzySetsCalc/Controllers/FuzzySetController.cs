@@ -9,14 +9,12 @@ namespace FuzzySetsCalc.Controllers
     public class FuzzySetController : Controller
     {
         private readonly FuzzySetStorage _fuzzySetStorage;
-        private readonly FuzzySetService _fuzzySetService;
         private readonly Invoker _invoker;
         private readonly JsonService _jsonService;
 
-        public FuzzySetController(FuzzySetStorage fuzzySetStorage, FuzzySetService fuzzySetService, Invoker invoker, JsonService jsonService)
+        public FuzzySetController(FuzzySetStorage fuzzySetStorage, Invoker invoker, JsonService jsonService)
         {
             _fuzzySetStorage = fuzzySetStorage;
-            _fuzzySetService = fuzzySetService;
             _invoker = invoker;
             _jsonService = jsonService;
         }
@@ -38,12 +36,11 @@ namespace FuzzySetsCalc.Controllers
             if (!ModelState.IsValid)
                 return View(trapezoid);
 
-            var command = new CreateTrapezoidCommand(_fuzzySetService)
+            var command = new CreateTrapezoidCommand()
             {
                 Trapezoid = trapezoid
             };
-            command.Execute();
-            _invoker.Commands.Add(command);
+            _invoker.InvokeSingle(command);
 
             return RedirectToAction("Index");
         }
@@ -57,14 +54,13 @@ namespace FuzzySetsCalc.Controllers
         [HttpPost]
         public IActionResult Intersect(BinarySetOperatorParameters model)
         {
-            var command = new IntersectCommand(_fuzzySetService)
+            var command = new IntersectCommand()
             {
                 ResultId = model.ResultId,
                 Id = model.SetId,
                 OtherSetId = model.OtherSetId
             };
-            command.Execute();
-            _invoker.Commands.Add(command);
+            _invoker.InvokeSingle(command);
 
             return RedirectToAction("Index");
         }
@@ -78,14 +74,13 @@ namespace FuzzySetsCalc.Controllers
         [HttpPost]
         public IActionResult Union(BinarySetOperatorParameters model)
         {
-            var command = new UnionCommand(_fuzzySetService)
+            var command = new UnionCommand()
             {
                 ResultId = model.ResultId,
                 Id = model.SetId,
                 OtherSetId = model.OtherSetId
             };
-            command.Execute();
-            _invoker.Commands.Add(command);
+            _invoker.InvokeSingle(command);
 
             return RedirectToAction("Index");
         }
@@ -93,9 +88,8 @@ namespace FuzzySetsCalc.Controllers
         [HttpGet]
         public IActionResult Delete(string id)
         {
-            var command = new RemoveSetCommand(_fuzzySetService) { RemoveId = id};
-            command.Execute();
-            _invoker.Commands.Add(command);
+            var command = new RemoveSetCommand() { RemoveId = id};
+            _invoker.InvokeSingle(command);
 
             return RedirectToAction("Index");
         }
